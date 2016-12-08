@@ -16,7 +16,13 @@ ActiveRecord::Schema.define(version: 20161208163546) do
   enable_extension "plpgsql"
 
   create_table "engineers", force: :cascade do |t|
-    t.string "name"
+    t.string   "slack_username",                 null: false
+    t.date     "duty_date"
+    t.boolean  "duty_fulfilled", default: false, null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.index ["duty_date"], name: "index_engineers_on_duty_date", unique: true, using: :btree
+    t.index ["slack_username"], name: "index_engineers_on_slack_username", unique: true, using: :btree
   end
 
 end
