@@ -1,6 +1,6 @@
 class MainController < ApplicationController
   def index
-    if (7...19) === Time.now.hour
+    if (0...12) === Time.now.hour
       @time_of_day = "morning"
       current_bg
     else
