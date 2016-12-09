@@ -1,1 +1,4 @@
-Hello, world!
+Good <%= @time_of_day %>!
+<%- if @current_bg %>
+  Welcome! The current BG is @<%= @current_bg.slack_username %>.
+<%- end %>
