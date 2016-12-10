@@ -6,4 +6,5 @@ describe Engineer do
   it { should validate_uniqueness_of(:slack_username) }
   it { should validate_uniqueness_of(:duty_date) }
   it { should validate_exclusion_of(:duty_fulfilled).in_array([nil]) }
+  it { should validate_exclusion_of(:duty_owed).in_array([nil]) }
 end
