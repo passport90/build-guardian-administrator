@@ -5,6 +5,7 @@ class MainController < ApplicationController
       run_morning
     else
       @time_of_day = "night"
+      run_night
     end
   end
 
@@ -29,6 +30,17 @@ class MainController < ApplicationController
     redirect_to "/"
   end
 
+  def conclude
+    redirect_to "/" and return if morning? || !current_bg
+
+    if params["commit"] == "Yes"
+      current_bg.duty_fulfilled = true
+      current_bg.save
+    end
+
+    redirect_to "/"
+  end
+
 private
   def morning?
     (0...12) === Time.now.hour
@@ -45,5 +57,11 @@ private
 
     @available_engineers = Engineer.where(duty_fulfilled: false)
     render template: "main/selection"
+  end
+
+  def run_night
+    return if !current_bg || current_bg.duty_fulfilled
+
+    render template: "main/conclusion"
   end
 end

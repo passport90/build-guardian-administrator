@@ -80,5 +80,26 @@ describe "main page", :type => :feature do
 
       expect(page).to have_text("Good night!")
     end
+
+    context "day has not been concluded" do
+      let!(:current_bg) { create :engineer, duty_date: Date.today }
+      it "displays conclusion form" do
+        visit "/"
+        expect(page).to have_text("Has @#{current_bg.slack_username} successfully finish the duty?")
+        expect(page).to have_button("Yes")
+        expect(page).to have_button("No")
+      end
+
+      context "bg has successfully finish the duty" do
+        it "set duty_fulfilled to true and conclude the day" do
+          visit "/"
+          click_button "Yes"
+          expect(page).not_to have_text(
+            "Has @#{current_bg.slack_username} successfully finish the duty?"
+          )
+        end
+      end
+    end
+
   end
 end
