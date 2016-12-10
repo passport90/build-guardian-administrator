@@ -35,9 +35,11 @@ class MainController < ApplicationController
 
     if params["commit"] == "Yes"
       current_bg.duty_fulfilled = true
-      current_bg.save
+    else
+      current_bg.duty_owed = true
     end
 
+      current_bg.save
     redirect_to "/"
   end
 
@@ -60,7 +62,15 @@ private
   end
 
   def run_night
-    return if !current_bg || current_bg.duty_fulfilled
+    return unless current_bg
+
+    if current_bg.duty_owed
+      render template: "main/concluded_failed" and return
+    end
+
+    if current_bg.duty_fulfilled
+      render template: "main/concluded_success" and return
+    end
 
     render template: "main/conclusion"
   end

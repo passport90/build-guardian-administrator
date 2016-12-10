@@ -94,8 +94,19 @@ describe "main page", :type => :feature do
         it "set duty_fulfilled to true and conclude the day" do
           visit "/"
           click_button "Yes"
-          expect(page).not_to have_text(
-            "Has @#{current_bg.slack_username} successfully finish the duty?"
+          expect(page).to have_text(
+            "@#{current_bg.slack_username} has successfully finished the duty."
+          )
+        end
+      end
+
+      context "bg has not successfully finish the duty" do
+        it "set duty_owed to true and conclude the day" do
+          visit "/"
+          click_button "No"
+          expect(page).to have_text(
+            "@#{current_bg.slack_username} has failed to finish the duty\
+            and will be BG again this round."
           )
         end
       end
