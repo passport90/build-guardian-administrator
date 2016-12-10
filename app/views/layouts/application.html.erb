@@ -9,6 +9,8 @@
   </head>
 
   <body>
+    Good <%= @time_of_day %>!
+    The current server time is <%= Time.now.to_s %>
     <%= yield %>
   </body>
 </html>

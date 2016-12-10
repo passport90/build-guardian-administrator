@@ -1,0 +1,13 @@
+<h1>BG Selection</h1>
+<p>Please tick any engineers below that are excluded from the selection:</p>
+<%= form_tag do %>
+<ul>
+  <%- @available_engineers.each do |engineer| %>
+    <li>
+      <%= check_box_tag :"excluded[#{engineer.id}]" %>
+      <%= "@#{engineer.slack_username}" %>
+    </li>
+  <% end %>
+</ul>
+<%= submit_tag "Roll the Dice and Select BG!" %>
+<% end %>
