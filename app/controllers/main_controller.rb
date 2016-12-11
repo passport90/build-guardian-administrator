@@ -24,6 +24,7 @@ class MainController < ApplicationController
     end
 
     selected_bg = available_engineers.sample
+    redirect_to "/" and return unless selected_bg
     selected_bg.duty_date = Date.today
     selected_bg.save
 
