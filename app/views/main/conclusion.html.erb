@@ -1,6 +1,6 @@
 <h1>BG Conclusion</h1>
 <p>Has <%= "@#{@current_bg.slack_username}" %> successfully finish the duty?</p>
-<%= form_tag("/conclude", method: "post") do %>
+<%= form_tag("/conclude") do %>
   <%= submit_tag "No" %>
   <%= submit_tag "Yes" %>
 <% end %>
