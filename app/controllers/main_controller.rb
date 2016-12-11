@@ -22,6 +22,7 @@ class MainController < ApplicationController
   def select
     redirect_to "/" and return unless morning?
     redirect_to "/" and return if current_bg
+    redirect_to "/" and return unless authenticated?
 
     excluded_engineer_ids = []
     if params[:excluded]
@@ -45,6 +46,7 @@ class MainController < ApplicationController
   def begin_round
     redirect_to "/" and return unless morning?
     redirect_to "/" and return if current_bg
+    redirect_to "/" and return unless authenticated?
 
     Engineer.all.update(duty_fulfilled: false, duty_date: nil)
     redirect_to "/"
@@ -53,6 +55,7 @@ class MainController < ApplicationController
   def pay_duty_debt
     redirect_to "/" and return unless morning?
     redirect_to "/" and return if current_bg
+    redirect_to "/" and return unless authenticated?
 
     duty_debtor = Engineer.where(duty_owed: true).first
     redirect_to "/" and return unless duty_debtor
@@ -67,6 +70,7 @@ class MainController < ApplicationController
   def conclude
     redirect_to "/" and return if morning?
     redirect_to "/" and return unless current_bg
+    redirect_to "/" and return unless authenticated?
 
     if params["commit"] == "Yes"
       current_bg.duty_fulfilled = true
