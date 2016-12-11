@@ -1,4 +1,12 @@
 <h1>BG Selection</h1>
+
+<%- if @duty_debtor %>
+  <p><%= "@#{@duty_debtor.slack_username}" %> has not finished a BG duty.</p>
+  <%= form_tag("/duty_debt_payment") do %>
+    <%= submit_tag "Select @#{@duty_debtor.slack_username} as BG" %>
+  <% end %>
+<% end %>
+
 <p>Please tick any engineers below that you want to exclude from the selection:</p>
 <%= form_tag do %>
 <ul>

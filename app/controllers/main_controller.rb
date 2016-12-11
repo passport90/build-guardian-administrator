@@ -30,6 +30,19 @@ class MainController < ApplicationController
     redirect_to "/"
   end
 
+  def duty_debt_payment
+    redirect_to "/" and return unless morning?
+
+    duty_debtor = Engineer.where(duty_owed: true).first
+    redirect_to "/" and return unless duty_debtor
+
+    duty_debtor.duty_owed = false
+    duty_debtor.duty_date = Date.today
+    duty_debtor.save
+
+    redirect_to "/"
+  end
+
   def conclude
     redirect_to "/" and return if morning? || !current_bg
 
@@ -57,7 +70,8 @@ private
       render template: "main/selected" and return
     end
 
-    @available_engineers = Engineer.where(duty_fulfilled: false)
+    @duty_debtor = Engineer.where(duty_owed: true).first
+    @available_engineers = Engineer.where(duty_fulfilled: false, duty_owed: false)
     render template: "main/selection"
   end
 

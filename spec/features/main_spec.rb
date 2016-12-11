@@ -33,6 +33,7 @@ describe "main page", :type => :feature do
         end
         past_bgs
       end
+      let!(:duty_debtor) { create :engineer, duty_owed: true }
       let!(:available_engineers) { create_list :engineer, Random.rand(4..8) }
 
       it "shows list of available BGs" do
@@ -68,6 +69,21 @@ describe "main page", :type => :feature do
         excluded_engineers.each do |excluded_engineer|
           expect(selected_bg.id).not_to eq(excluded_engineer.id)
         end
+      end
+
+      it "shows the duty debtor" do
+        visit "/"
+
+        expect(page).to have_text("@#{duty_debtor.slack_username} has not finished a BG duty.")
+        expect(page).to have_button("Select @#{duty_debtor.slack_username} as BG")
+      end
+
+      it "could select duty debtor as BG" do
+        visit "/"
+
+        click_button "Select @#{duty_debtor.slack_username} as BG"
+
+        expect(page).to have_text("Welcome! The current BG is @#{duty_debtor.slack_username}")
       end
     end
   end
