@@ -29,9 +29,9 @@ describe MainController, :type => :controller do
     end
   end
 
-  describe "POST #duty_debt_payment" do
+  describe "POST #pay_duty_debt" do
     it "responds successfully with an HTTP 302 status code" do
-      post :duty_debt_payment
+      post :pay_duty_debt
       expect(response).to have_http_status(302)
     end
   end

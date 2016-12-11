@@ -17,9 +17,9 @@ describe "routing to main", :type => :routing do
     expect(:post => "/conclude").to route_to(:controller => "main", :action => "conclude")
   end
 
-  it "routes POST /duty_debt_payment to main#duty_debt_payment" do
-    expect(:post => "/duty_debt_payment").to route_to(
-      :controller => "main", :action => "duty_debt_payment"
+  it "routes POST /pay_duty_debt to main#pay_duty_debt" do
+    expect(:post => "/pay_duty_debt").to route_to(
+      :controller => "main", :action => "pay_duty_debt"
     )
   end
 

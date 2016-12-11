@@ -2,7 +2,7 @@
 
 <%- if @duty_debtor %>
   <p><%= "@#{@duty_debtor.slack_username}" %> has not finished a BG duty.</p>
-  <%= form_tag("/duty_debt_payment") do %>
+  <%= form_tag("/pay_duty_debt") do %>
     <%= submit_tag "Select @#{@duty_debtor.slack_username} as BG" %>
   <% end %>
 <% end %>

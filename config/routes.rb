@@ -4,5 +4,5 @@ Rails.application.routes.draw do
   post "/authenticate", to: "main#authenticate"
   post "/", to: "main#select"
   post "/conclude", to: "main#conclude"
-  post "/duty_debt_payment", to: "main#duty_debt_payment"
+  post "/pay_duty_debt", to: "main#pay_duty_debt"
 end

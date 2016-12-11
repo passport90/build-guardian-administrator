@@ -42,7 +42,7 @@ class MainController < ApplicationController
     redirect_to "/"
   end
 
-  def duty_debt_payment
+  def pay_duty_debt
     redirect_to "/" and return unless morning?
     redirect_to "/" and return if current_bg
 
