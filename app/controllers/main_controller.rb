@@ -13,8 +13,6 @@ class MainController < ApplicationController
     redirect_to "/" and return unless morning?
     redirect_to "/" and return if current_bg
 
-    end morning?
-
     excluded_engineer_ids = []
     if params[:excluded]
       params[:excluded].each do |id, is_excluded|
