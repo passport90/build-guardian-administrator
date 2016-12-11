@@ -11,6 +11,9 @@ class MainController < ApplicationController
 
   def select
     redirect_to "/" and return unless morning?
+    redirect_to "/" and return if current_bg
+
+    end morning?
 
     excluded_engineer_ids = []
     if params[:excluded]
@@ -33,6 +36,7 @@ class MainController < ApplicationController
 
   def duty_debt_payment
     redirect_to "/" and return unless morning?
+    redirect_to "/" and return if current_bg
 
     duty_debtor = Engineer.where(duty_owed: true).first
     redirect_to "/" and return unless duty_debtor
@@ -45,7 +49,8 @@ class MainController < ApplicationController
   end
 
   def conclude
-    redirect_to "/" and return if morning? || !current_bg
+    redirect_to "/" and return if morning?
+    redirect_to "/" and return unless current_bg
 
     if params["commit"] == "Yes"
       current_bg.duty_fulfilled = true
