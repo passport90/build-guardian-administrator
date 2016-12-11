@@ -42,6 +42,14 @@ class MainController < ApplicationController
     redirect_to "/"
   end
 
+  def begin_round
+    redirect_to "/" and return unless morning?
+    redirect_to "/" and return if current_bg
+
+    Engineer.all.update(duty_fulfilled: false, duty_date: nil)
+    redirect_to "/"
+  end
+
   def pay_duty_debt
     redirect_to "/" and return unless morning?
     redirect_to "/" and return if current_bg

@@ -22,6 +22,13 @@ describe MainController, :type => :controller do
     end
   end
 
+  describe "POST #begin_round" do
+    it "responds successfully with an HTTP 302 status code" do
+      post :begin_round
+      expect(response).to have_http_status(302)
+    end
+  end
+
   describe "POST #conclude" do
     it "responds successfully with an HTTP 302 status code" do
       post :conclude

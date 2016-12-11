@@ -19,3 +19,7 @@
 </ul>
 <%= submit_tag "Roll the Dice and Select BG!" %>
 <% end %>
+<p>...or you could:</p>
+<%= form_tag("/begin_round") do %>
+<%= submit_tag "Begin New Round" %>
+<% end %>

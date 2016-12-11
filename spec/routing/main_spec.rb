@@ -13,6 +13,10 @@ describe "routing to main", :type => :routing do
     expect(:post => "/").to route_to(:controller => "main", :action => "select")
   end
 
+  it "routes POST /begin_round to main#conclude" do
+    expect(:post => "/begin_round").to route_to(:controller => "main", :action => "begin_round")
+  end
+
   it "routes POST /conclude to main#conclude" do
     expect(:post => "/conclude").to route_to(:controller => "main", :action => "conclude")
   end

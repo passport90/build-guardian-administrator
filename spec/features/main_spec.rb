@@ -60,6 +60,7 @@ describe "main page", :type => :feature do
             expect(page).not_to have_text("@#{engineer.slack_username}")
           end
           expect(page).to have_button("Roll the Dice and Select BG!")
+          expect(page).to have_button("Begin New Round")
         end
 
         it "select a BG randomly from available engineers if button clicked" do
@@ -83,6 +84,18 @@ describe "main page", :type => :feature do
           selected_bg = Engineer.where(duty_date: Date.today).first
           excluded_engineers.each do |excluded_engineer|
             expect(selected_bg.id).not_to eq(excluded_engineer.id)
+          end
+        end
+
+        it "set all past bgs as available after begining new round" do
+          visit "/"
+
+          click_button "Begin New Round"
+          available_engineers.each do |engineer|
+            expect(page).to have_text("@#{engineer.slack_username}")
+          end
+          past_bgs.each do |engineer|
+            expect(page).to have_text("@#{engineer.slack_username}")
           end
         end
 
@@ -130,7 +143,7 @@ describe "main page", :type => :feature do
           fill_in "login[password]", with: "queenjaneapproximately"
           click_button "Login"
         end
-        
+
         it "displays conclusion form" do
           visit "/"
           expect(page).to have_text("Has @#{current_bg.slack_username} successfully finish the duty?")
