@@ -9,6 +9,16 @@ class MainController < ApplicationController
     end
   end
 
+  def authenticate
+    redirect_to "/" and return if authenticated?
+    unless params.fetch(:login, {})[:password] == "queenjaneapproximately"
+      redirect_to "/" and return
+    end
+
+    session[:authenticated] = true
+    redirect_to "/"
+  end
+
   def select
     redirect_to "/" and return unless morning?
     redirect_to "/" and return if current_bg
@@ -65,14 +75,17 @@ private
     (0...12) === Time.now.hour
   end
 
+  def authenticated?
+    session[:authenticated] == true
+  end
+
   def current_bg
     @current_bg ||= Engineer.where(duty_date: Date.today).first
   end
 
   def run_morning
-    if current_bg
-      render template: "main/selected" and return
-    end
+    render template: "main/selected" and return if current_bg
+    render template: "main/authentication" and return unless authenticated?
 
     @duty_debtor = Engineer.where(duty_owed: true).first
     @available_engineers = Engineer.where(duty_fulfilled: false, duty_owed: false)
@@ -82,13 +95,9 @@ private
   def run_night
     return unless current_bg
 
-    if current_bg.duty_owed
-      render template: "main/concluded_failed" and return
-    end
-
-    if current_bg.duty_fulfilled
-      render template: "main/concluded_success" and return
-    end
+    render template: "main/concluded_failed" and return if current_bg.duty_owed
+    render template: "main/concluded_success" and return if current_bg.duty_fulfilled
+    render template: "main/authentication" and return unless authenticated?
 
     render template: "main/conclusion"
   end

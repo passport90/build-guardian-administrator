@@ -21,69 +21,85 @@ describe "main page", :type => :feature do
     end
 
     context "bg not selected" do
-      let!(:past_bgs) do
-        past_bgs = []
-        num_of_past_bgs = Random.rand 0..3
-        num_of_past_bgs.times do |i|
-          past_bgs << create(
-            :engineer,
-            duty_date: Faker::Date.between(100.days.ago, 1.days.ago),
-            duty_fulfilled: true
-          )
-        end
-        past_bgs
-      end
-      let!(:duty_debtor) { create :engineer, duty_owed: true }
-      let!(:available_engineers) { create_list :engineer, Random.rand(4..8) }
+      context "not authenticated" do
+        it "asks for password" do
+          visit "/"
 
-      it "shows list of available BGs" do
-        visit "/"
-        available_engineers.each do |engineer|
-          expect(page).to have_text("@#{engineer.slack_username}")
-        end
-        past_bgs.each do |engineer|
-          expect(page).not_to have_text("@#{engineer.slack_username}")
-        end
-        expect(page).to have_button("Roll the Dice and Select BG!")
-      end
-
-      it "select a BG randomly from available engineers if button clicked" do
-        visit "/"
-        click_button "Roll the Dice and Select BG!"
-
-        selected_bg = Engineer.where(duty_date: Date.today).first
-        expect(page).to have_text("Welcome! The current BG is @#{selected_bg.slack_username}")
-      end
-
-      it "never select an engineer as BG if specifically excluded" do
-        num_of_excluded = Random.rand 1..3
-        excluded_engineers = available_engineers.sample num_of_excluded
-
-        visit "/"
-        excluded_engineers.each do |excluded_engineer|
-          check "excluded[#{excluded_engineer.id}]"
-        end
-        click_button "Roll the Dice and Select BG!"
-
-        selected_bg = Engineer.where(duty_date: Date.today).first
-        excluded_engineers.each do |excluded_engineer|
-          expect(selected_bg.id).not_to eq(excluded_engineer.id)
+          expect(page).to have_text("Enter the password")
+          expect(page).to have_button("Login")
         end
       end
 
-      it "shows the duty debtor" do
-        visit "/"
+      context "authenticated" do
+        let!(:past_bgs) do
+          past_bgs = []
+          num_of_past_bgs = Random.rand 0..3
+          num_of_past_bgs.times do |i|
+            past_bgs << create(
+              :engineer,
+              duty_date: Faker::Date.between(100.days.ago, 1.days.ago),
+              duty_fulfilled: true
+            )
+          end
+          past_bgs
+        end
+        let!(:duty_debtor) { create :engineer, duty_owed: true }
+        let!(:available_engineers) { create_list :engineer, Random.rand(4..8) }
+        before do
+          visit "/"
+          fill_in "login[password]", with: "queenjaneapproximately"
+          click_button "Login"
+        end
 
-        expect(page).to have_text("@#{duty_debtor.slack_username} has not finished a BG duty.")
-        expect(page).to have_button("Select @#{duty_debtor.slack_username} as BG")
-      end
+        it "shows list of available BGs" do
+          visit "/"
+          available_engineers.each do |engineer|
+            expect(page).to have_text("@#{engineer.slack_username}")
+          end
+          past_bgs.each do |engineer|
+            expect(page).not_to have_text("@#{engineer.slack_username}")
+          end
+          expect(page).to have_button("Roll the Dice and Select BG!")
+        end
 
-      it "could select duty debtor as BG" do
-        visit "/"
+        it "select a BG randomly from available engineers if button clicked" do
+          visit "/"
+          click_button "Roll the Dice and Select BG!"
 
-        click_button "Select @#{duty_debtor.slack_username} as BG"
+          selected_bg = Engineer.where(duty_date: Date.today).first
+          expect(page).to have_text("Welcome! The current BG is @#{selected_bg.slack_username}")
+        end
 
-        expect(page).to have_text("Welcome! The current BG is @#{duty_debtor.slack_username}")
+        it "never select an engineer as BG if specifically excluded" do
+          num_of_excluded = Random.rand 1..3
+          excluded_engineers = available_engineers.sample num_of_excluded
+
+          visit "/"
+          excluded_engineers.each do |excluded_engineer|
+            check "excluded[#{excluded_engineer.id}]"
+          end
+          click_button "Roll the Dice and Select BG!"
+
+          selected_bg = Engineer.where(duty_date: Date.today).first
+          excluded_engineers.each do |excluded_engineer|
+            expect(selected_bg.id).not_to eq(excluded_engineer.id)
+          end
+        end
+
+        it "shows the duty debtor" do
+          visit "/"
+
+          expect(page).to have_text("@#{duty_debtor.slack_username} has not finished a BG duty.")
+          expect(page).to have_button("Select @#{duty_debtor.slack_username} as BG")
+        end
+
+        it "could select duty debtor as BG" do
+          visit "/"
+
+          click_button "Select @#{duty_debtor.slack_username} as BG"
+
+          expect(page).to have_text("Welcome! The current BG is @#{duty_debtor.slack_username}")
+        end
       end
     end
   end
@@ -99,31 +115,48 @@ describe "main page", :type => :feature do
 
     context "day has not been concluded" do
       let!(:current_bg) { create :engineer, duty_date: Date.today }
-      it "displays conclusion form" do
-        visit "/"
-        expect(page).to have_text("Has @#{current_bg.slack_username} successfully finish the duty?")
-        expect(page).to have_button("Yes")
-        expect(page).to have_button("No")
-      end
-
-      context "bg has successfully finish the duty" do
-        it "set duty_fulfilled to true and conclude the day" do
+      context "not authenticated" do
+        it "asks for password" do
           visit "/"
-          click_button "Yes"
-          expect(page).to have_text(
-            "@#{current_bg.slack_username} has successfully finished the duty."
-          )
+
+          expect(page).to have_text("Enter the password")
+          expect(page).to have_button("Login")
         end
       end
 
-      context "bg has not successfully finish the duty" do
-        it "set duty_owed to true and conclude the day" do
+      context "authenticated" do
+        before do
           visit "/"
-          click_button "No"
-          expect(page).to have_text(
-            "@#{current_bg.slack_username} has failed to finish the duty\
-            and will be BG again this round."
-          )
+          fill_in "login[password]", with: "queenjaneapproximately"
+          click_button "Login"
+        end
+        
+        it "displays conclusion form" do
+          visit "/"
+          expect(page).to have_text("Has @#{current_bg.slack_username} successfully finish the duty?")
+          expect(page).to have_button("Yes")
+          expect(page).to have_button("No")
+        end
+
+        context "bg has successfully finish the duty" do
+          it "set duty_fulfilled to true and conclude the day" do
+            visit "/"
+            click_button "Yes"
+            expect(page).to have_text(
+              "@#{current_bg.slack_username} has successfully finished the duty."
+            )
+          end
+        end
+
+        context "bg has not successfully finish the duty" do
+          it "set duty_owed to true and conclude the day" do
+            visit "/"
+            click_button "No"
+            expect(page).to have_text(
+              "@#{current_bg.slack_username} has failed to finish the duty\
+              and will be BG again this round."
+            )
+          end
         end
       end
     end

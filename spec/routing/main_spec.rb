@@ -5,6 +5,10 @@ describe "routing to main", :type => :routing do
     expect(:get => "/").to route_to(:controller => "main", :action => "index")
   end
 
+  it "routes POST /authenticate to main#authenticate" do
+    expect(:post => "/authenticate").to route_to(:controller => "main", :action => "authenticate")
+  end
+
   it "routes POST / to main#select" do
     expect(:post => "/").to route_to(:controller => "main", :action => "select")
   end
@@ -18,4 +22,5 @@ describe "routing to main", :type => :routing do
       :controller => "main", :action => "duty_debt_payment"
     )
   end
+
 end

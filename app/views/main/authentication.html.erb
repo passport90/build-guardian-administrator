@@ -1,0 +1,5 @@
+<h1>Login Page</h1>
+<%= form_tag "/authenticate" do %>
+  <p>Enter the password <%= password_field :login, :password %> </p>
+  <%= submit_tag "Login" %>
+<% end %>

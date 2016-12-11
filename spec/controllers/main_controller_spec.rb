@@ -8,6 +8,13 @@ describe MainController, :type => :controller do
     end
   end
 
+  describe "POST #authenticate" do
+    it "responds successfully with an HTTP 302 status code" do
+      post :authenticate
+      expect(response).to have_http_status(302)
+    end
+  end
+
   describe "POST #select" do
     it "responds successfully with an HTTP 302 status code" do
       post :select
