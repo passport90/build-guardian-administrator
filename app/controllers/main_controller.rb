@@ -1,7 +1,7 @@
 class MainController < ApplicationController
   def index
     if morning?
-      @time_of_day = "morning"
+      @time_of_day = "day"
       render template: "main/weekend" and return unless weekday?
       run_morning
     else
