@@ -7,17 +7,21 @@
   <% end %>
 <% end %>
 
-<p>Please tick any engineers below that you want to exclude from the selection:</p>
-<%= form_tag do %>
-<ul>
-  <%- @available_engineers.each do |engineer| %>
-    <li>
-      <%= check_box_tag :"excluded[#{engineer.id}]" %>
-      <%= "@#{engineer.slack_username}" %>
-    </li>
+<%- unless @available_engineers.empty? %>
+  <p>Please tick any engineers below that you want to exclude from the selection:</p>
+  <%= form_tag do %>
+  <ul>
+    <%- @available_engineers.each do |engineer| %>
+      <li>
+        <%= check_box_tag :"excluded[#{engineer.id}]" %>
+        <%= "@#{engineer.slack_username}" %>
+      </li>
+    <% end %>
+  </ul>
+  <%= submit_tag "Roll the Dice and Select BG!" %>
   <% end %>
-</ul>
-<%= submit_tag "Roll the Dice and Select BG!" %>
+<% else %>
+  <p>There is no more available engineers.</p>
 <% end %>
 <p>...or you could:</p>
 <%= form_tag("/begin_round") do %>

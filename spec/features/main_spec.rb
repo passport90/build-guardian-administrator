@@ -3,6 +3,9 @@ require 'rails_helper'
 describe "main page", :type => :feature do
 
   let!(:now) { Time.now }
+  let!(:today) { Date.today }
+  before { allow(today).to receive(:wday) { Random.rand(1..5) }  }
+  before { allow(Date).to receive(:today) { today }  }
   context "morning" do
     before { allow(Time).to receive(:now) { now.change hour: Random.rand(0...12) } }
     it "displays Good morning" do
@@ -113,6 +116,16 @@ describe "main page", :type => :feature do
 
           expect(page).to have_text("Welcome! The current BG is @#{duty_debtor.slack_username}")
         end
+
+        context "there is no BG available" do
+          let!(:available_engineers) { [] }
+          it "does not list available BG and there is no roll dice button" do
+            visit "/"
+
+            expect(page).to have_text("There is no more available engineers.")
+            expect(page).not_to have_button("Roll the Dice and Select BG!")
+          end
+        end
       end
     end
   end
@@ -173,6 +186,18 @@ describe "main page", :type => :feature do
         end
       end
     end
+  end
 
+  context "weekend" do
+    before { allow(today).to receive(:wday) { Random.rand(0..1) == 0 ? 0 : 6 }  }
+    it "Shows happy weekend and does not show anything related to BG" do
+      visit "/"
+
+      expect(page).to have_text("Happy weekend!")
+      expect(page).not_to have_text("Welcome! The current BG is @")
+      expect(page).not_to have_button("Roll the Dice and Select BG!")
+      expect(page).not_to have_button("Begin New Round")
+      expect(page).not_to have_text("finish the duty")
+    end
   end
 end

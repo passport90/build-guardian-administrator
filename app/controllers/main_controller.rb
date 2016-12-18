@@ -2,14 +2,17 @@ class MainController < ApplicationController
   def index
     if morning?
       @time_of_day = "morning"
+      render template: "main/weekend" and return unless weekday?
       run_morning
     else
       @time_of_day = "night"
+      render template: "main/weekend" and return unless weekday?
       run_night
     end
   end
 
   def authenticate
+    redirect_to "/" and return unless weekday?
     redirect_to "/" and return if authenticated?
     unless params.fetch(:login, {})[:password] == "queenjaneapproximately"
       redirect_to "/" and return
@@ -20,6 +23,7 @@ class MainController < ApplicationController
   end
 
   def select
+    redirect_to "/" and return unless weekday?
     redirect_to "/" and return unless morning?
     redirect_to "/" and return if current_bg
     redirect_to "/" and return unless authenticated?
@@ -44,6 +48,7 @@ class MainController < ApplicationController
   end
 
   def begin_round
+    redirect_to "/" and return unless weekday?
     redirect_to "/" and return unless morning?
     redirect_to "/" and return if current_bg
     redirect_to "/" and return unless authenticated?
@@ -53,6 +58,7 @@ class MainController < ApplicationController
   end
 
   def pay_duty_debt
+    redirect_to "/" and return unless weekday?
     redirect_to "/" and return unless morning?
     redirect_to "/" and return if current_bg
     redirect_to "/" and return unless authenticated?
@@ -68,6 +74,7 @@ class MainController < ApplicationController
   end
 
   def conclude
+    redirect_to "/" and return unless weekday?
     redirect_to "/" and return if morning?
     redirect_to "/" and return unless current_bg
     redirect_to "/" and return unless authenticated?
@@ -83,6 +90,10 @@ class MainController < ApplicationController
   end
 
 private
+  def weekday?
+    (1..5) === Date.today.wday
+  end
+
   def morning?
     (0...12) === Time.now.hour
   end
