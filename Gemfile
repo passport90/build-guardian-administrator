@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.0.0', '>= 5.0.0.1'
+gem 'rails', '~> 5.0.2'
 # Use PostgreSQL as the database for Active Record
 gem 'pg'
 # Use Puma as the app server
@@ -49,8 +49,8 @@ group :development do
 end
 
 group :test do
+  gem 'shoulda-matchers', git: 'https://github.com/thoughtbot/shoulda-matchers.git', branch: 'rails-5'
   gem 'database_cleaner'
-  gem 'shoulda-matchers'
   gem 'capybara'
 end
 
