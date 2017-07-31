@@ -8,10 +8,10 @@ describe "main page", :type => :feature do
   before { allow(Date).to receive(:today) { today }  }
   context "morning" do
     before { allow(Time).to receive(:now) { now.change hour: Random.rand(0...12) } }
-    it "displays Good morning" do
+    it "displays Good day" do
       visit "/"
 
-      expect(page).to have_text("Good morning!")
+      expect(page).to have_text("Good day!")
     end
 
     context "bg selected" do
