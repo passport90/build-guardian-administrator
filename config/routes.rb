@@ -6,4 +6,6 @@ Rails.application.routes.draw do
   post "/begin_round", to: "main#begin_round"
   post "/conclude", to: "main#conclude"
   post "/pay_duty_debt", to: "main#pay_duty_debt"
+
+  resources :engineers
 end

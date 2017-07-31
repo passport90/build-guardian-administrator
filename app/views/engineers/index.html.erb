@@ -1,0 +1,27 @@
+<div class="engineers">
+  <a class="engineers-add" href=<%= "#{new_engineer_path}" %>>Add</a>
+</div>
+
+<table>
+  <thead>
+    <th>No</th>
+    <th>Username</th>
+    <th>Action</th>
+  </thead>
+  <tbody>
+    <%- @engineers.each_with_index do |engineer, index| %>
+    <tr>
+      <td>
+        <%= "#{index + 1}" %>
+      </td>
+      <td>
+        <%= "#{engineer.slack_username}" %>
+      </td>
+      <td>
+        <a class="engineers-edit" data-id=<%= "#{engineer.id}" %> href=<%= "#{edit_engineer_path(engineer.id)}" %>>Edit</a>
+        <%= link_to 'Delete', engineer, :method => :delete, :class => "engineers-delete", :data => {:id => engineer.id, :confirm => "Are you sure?"} %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

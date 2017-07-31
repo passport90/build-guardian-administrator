@@ -1,0 +1,6 @@
+<h1>Edit Page</h1>
+<%= form_tag engineer_path, method: :put do %>
+  <label for="engineer_slack_username">Slack username</label>
+  <%= text_field :engineer, :slack_username %>
+  <%= submit_tag "Submit" %>
+<% end %>
